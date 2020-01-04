@@ -1,13 +1,15 @@
 package main
 
 import (
-	"./routes"
-	"github.com/gin-gonic/gin"
+	gin "github.com/gin-gonic/gin"
+	config "muskdaily.com/config"
+	routes "muskdaily.com/routes"
 )
 
 func main() {
+	configuration := config.GetConfiguration()
 	r := gin.Default()
 	taskRoutes := (routes.Task{R: r.Group("/task")})
 	taskRoutes.SetupRoutes()
-	r.Run() // listen and serve on 0.0.0.0:8080 (for windows "localhost:8080")
+	r.Run(":" + configuration.Port)
 }
