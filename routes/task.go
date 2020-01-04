@@ -14,6 +14,6 @@ func (this *Task) SetupRoutes() {
 
 func (this *Task) GetTask(c *gin.Context) {
 	c.JSON(200, gin.H{
-		"message": "task",
+		"message": "Success",
 	})
 }
