@@ -8,7 +8,11 @@ import (
 )
 
 type configuration struct {
-	Port string
+	Port     string
+	Database struct {
+		Path string
+		Port string
+	}
 }
 
 var instance *configuration

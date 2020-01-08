@@ -1,3 +1,7 @@
 {
-    "Port" : "5000"
+    "Port" : "5000",
+    "Database": {
+        "Path": "mongodb://localhost",
+        "Port": "27017"
+    }
 }
