@@ -3,6 +3,8 @@ package config
 import (
 	"encoding/json"
 	"fmt"
+
+	environmentEnum "muskdaily.com/enums"
 	"os"
 	"sync"
 )
@@ -13,6 +15,7 @@ type configuration struct {
 		Path string
 		Port string
 	}
+	Environment environmentEnum.Environment
 }
 
 var instance *configuration
