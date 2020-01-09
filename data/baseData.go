@@ -21,12 +21,6 @@ func (this *BaseData) Connect() {
 	if err != nil {
 		panic(err)
 	}
-
-	err = this.client.Ping(context.TODO(), nil)
-
-	if err != nil {
-		panic(err)
-	}
 }
 
 func (this *BaseData) Disconnect() {

@@ -21,6 +21,8 @@ func (this AccountManager) SignUp(signUpViewModel viewModel.SignUpViewModel) (bo
 	}
 
 	this.AccountData.Connect()
+	defer this.AccountData.Disconnect()
+
 	this.AccountData.AddAccount(model.Account{
 		FirstName:      signUpViewModel.FirstName,
 		LastName:       signUpViewModel.LastName,
@@ -28,7 +30,8 @@ func (this AccountManager) SignUp(signUpViewModel viewModel.SignUpViewModel) (bo
 		HashedPassword: hashedPassword,
 		Active:         signUpViewModel.Active,
 	})
-	this.AccountData.Disconnect()
+
+	
 
 	return true, "User is registered"
 }
