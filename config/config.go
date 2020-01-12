@@ -10,12 +10,18 @@ import (
 )
 
 type configuration struct {
-	Port     string
-	Database struct {
+	Environment environmentEnum.Environment
+	Port        string
+	Database    struct {
 		Path string
 		Port string
 	}
-	Environment environmentEnum.Environment
+	Smtp struct {
+		Host     string
+		Port     string
+		UserName string
+		Password string
+	}
 }
 
 var instance *configuration
