@@ -18,7 +18,7 @@
 # Build and Test
 Run ```go run main.go``` command on root directory.
 
-Web should be up and running on ```http://localhost:3000/```
+Api should be up and running on ```http://localhost:3000/```
 
 # Contribute
 Coming soon...
