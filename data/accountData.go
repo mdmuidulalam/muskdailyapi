@@ -8,7 +8,7 @@ import (
 )
 
 type AccountData struct {
-	BaseData
+	Data
 }
 
 func (this AccountData) InsertAccount(account model.Account) bool {

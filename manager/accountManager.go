@@ -8,27 +8,31 @@ import (
 
 	data "muskdaily.com/data/abstractions"
 	model "muskdaily.com/model"
-	emailService "muskdaily.com/services/emailService"
-	randomService "muskdaily.com/services/randomService"
+	service "muskdaily.com/service/abstractions"
 	accountViewodel "muskdaily.com/viewModel/account"
 )
 
 type AccountManager struct {
-	AccountData data.AccountData
+	Manager
+	AccountData   data.AccountData
+	EmailService  service.EmailService
+	RandomService service.RandomService
 }
 
 func (this AccountManager) SignUp(signUpViewModel accountViewodel.SignUpViewModel) int {
 	this.AccountData.Connect()
 	defer this.AccountData.Disconnect()
+	this.RandomService.UpdateSeededRand()
 
 	accounts := this.AccountData.SelectAccounts(bson.D{{"email", signUpViewModel.Email}})
+
 	if len(accounts) == 0 {
 		hashedPassword, err := bcrypt.GenerateFromPassword([]byte(signUpViewModel.Password), bcrypt.DefaultCost)
 		if err != nil {
 			panic(err)
 		}
 
-		activationCode := randomService.RandString(randomService.RandIntRange(5, 30))
+		activationCode := this.RandomService.RandString(this.RandomService.RandIntRange(5, 30))
 		hashedActivationCode, err := bcrypt.GenerateFromPassword([]byte(activationCode), bcrypt.DefaultCost)
 		if err != nil {
 			panic(err)
@@ -46,14 +50,14 @@ func (this AccountManager) SignUp(signUpViewModel accountViewodel.SignUpViewMode
 			CodeSentTime:   time.Now().UTC(),
 		})
 
-		go emailService.SendMail([]string{signUpViewModel.Email}, "",
+		go this.EmailService.SendMailSystem([]string{signUpViewModel.Email},
 			"Musk Daily Account Activation Email",
 			"Hello from Musk Daily,\r\nYour activation link for Musk Daily is: "+
 				activationCode+"\r\nPlease, clcik on the link to activate link to activate you account.\r\n\r\nIf you didn't register for Musk Daily ignore this email.")
 
 		return 201
 	} else if !accounts[0].Active {
-		activationCode := randomService.RandString(randomService.RandIntRange(5, 30))
+		activationCode := this.RandomService.RandString(this.RandomService.RandIntRange(5, 30))
 		hashedActivationCode, err := bcrypt.GenerateFromPassword([]byte(activationCode), bcrypt.DefaultCost)
 		if err != nil {
 			panic(err)
@@ -61,7 +65,7 @@ func (this AccountManager) SignUp(signUpViewModel accountViewodel.SignUpViewMode
 
 		this.AccountData.UpdateAccounts(bson.D{{"email", signUpViewModel.Email}}, bson.D{{"$set", bson.D{{"hashedcode", hashedActivationCode}, {"codesenttime", time.Now().UTC()}}}})
 
-		go emailService.SendMail([]string{signUpViewModel.Email}, "",
+		go this.EmailService.SendMailSystem([]string{signUpViewModel.Email},
 			"Musk Daily Account Activation Email",
 			"Hello from Musk Daily,\r\n"+
 				"You have already created an account for Musk Daily, but didn't activate the account.\r\n"+

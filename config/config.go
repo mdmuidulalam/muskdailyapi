@@ -2,14 +2,15 @@ package config
 
 import (
 	"encoding/json"
-	"fmt"
 
-	environmentEnum "muskdaily.com/enums"
 	"os"
 	"sync"
+
+	enableServiceEnum "muskdaily.com/enums/enableService"
+	environmentEnum "muskdaily.com/enums/environment"
 )
 
-type configuration struct {
+type Configuration struct {
 	Environment environmentEnum.Environment
 	Port        string
 	Database    struct {
@@ -17,27 +18,28 @@ type configuration struct {
 		Port string
 	}
 	Smtp struct {
-		Host     string
-		Port     string
-		UserName string
-		Password string
+		EnableService enableServiceEnum.EnableService
+		Host          string
+		Port          string
+		UserName      string
+		Password      string
 	}
+	RandomSeedOffset int64
 }
 
-var instance *configuration
+var instance *Configuration
 var once sync.Once
 
-func GetConfiguration() *configuration {
+func GetConfiguration() *Configuration {
 	once.Do(func() {
 		file, _ := os.Open("./config/config.json")
 		defer file.Close()
 		decoder := json.NewDecoder(file)
-		instance = &configuration{}
+		instance = &Configuration{}
 		err := decoder.Decode(&instance)
 		if err != nil {
-			fmt.Println("error:", err)
+			panic("Configuration parsing error!!!")
 		}
-		fmt.Println("Called")
 	})
 
 	return instance

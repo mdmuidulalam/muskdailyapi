@@ -1,14 +1,17 @@
 package main
 
 import (
+	"math/rand"
 	"os"
+	"time"
 
 	gin "github.com/gin-gonic/gin"
 	config "muskdaily.com/config"
 	data "muskdaily.com/data"
-	environmentEnum "muskdaily.com/enums"
+	environmentEnum "muskdaily.com/enums/environment"
 	manager "muskdaily.com/manager"
 	routes "muskdaily.com/routes"
+	service "muskdaily.com/service"
 )
 
 func main() {
@@ -21,10 +24,26 @@ func main() {
 		r.Use(gin.RecoveryWithWriter(myfile))
 	}
 
+	baseService := service.Service{
+		Configuration: configuration,
+	}
+
+	baseData := data.Data{
+		Configuration: configuration,
+	}
+
 	routes.Account{
 		Base: routes.Base{R: r.Group("/account")},
 		SignUpManager: manager.AccountManager{
-			AccountData: &data.AccountData{},
+			Manager:     manager.Manager{},
+			AccountData: &data.AccountData{Data: baseData},
+			EmailService: service.EmailService{
+				Service: baseService,
+			},
+			RandomService: service.RandomService{
+				Service:    baseService,
+				SeededRand: rand.New(rand.NewSource(time.Now().UnixNano() + configuration.RandomSeedOffset)),
+			},
 		},
 	}.New()
 
