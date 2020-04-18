@@ -1,0 +1,82 @@
+info:
+  contact: {}
+  license: {}
+paths:
+  /account/activate:
+    post:
+      consumes:
+      - application/json
+      description: It will activate the account if proper code is provided. The code
+        will be sent to user through email.
+      operationId: activate-new-account
+      parameters:
+      - description: Email
+        in: body
+        name: Email
+        required: true
+        schema:
+          type: string
+      - description: ActivationCode
+        in: body
+        name: ActivationCode
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: The account is activated.
+        "400":
+          description: The server cannot or will not process the request due to an
+            apparent client error.
+        "401":
+          description: Wrong activation code is given.
+        "406":
+          description: The account is already activated.
+        "409":
+          description: The account is not registered yet.
+      summary: Activate a account
+  /account/signup:
+    post:
+      consumes:
+      - application/json
+      description: It will register new users if the post data provided properly.
+      operationId: signup-new-account
+      parameters:
+      - description: FirstName
+        in: body
+        name: firstName
+        required: true
+        schema:
+          type: string
+      - description: LastName
+        in: body
+        name: lastname
+        required: true
+        schema:
+          type: string
+      - description: Email
+        in: body
+        name: email
+        required: true
+        schema:
+          type: string
+      - description: Password
+        in: body
+        name: password
+        required: true
+        schema:
+          type: string
+      responses:
+        "201":
+          description: Created a new account. Not active yet, an activation email
+            will be sent to the given email.
+        "400":
+          description: The server cannot or will not process the request due to an
+            apparent client error.
+        "406":
+          description: An account already exists with the given email.
+        "409":
+          description: Account was created before but not activated. A new activation
+            email will be sent to the given email.
+      summary: Signup an account
+swagger: "2.0"
