@@ -42,7 +42,7 @@ func (this Account) SignUp(c *gin.Context) {
 	c.Writer.WriteHeader(this.SignUpManager.SignUp(signUpViewModel))
 }
 
-// @Summary Activate a account
+// @Summary Activate an account
 // @Description It will activate the account if proper code is provided. The code will be sent to user through email.
 // @ID activate-new-account
 // @Router /account/activate [post]
