@@ -5,6 +5,10 @@ import (
 	"os"
 	"time"
 
+	swaggerFiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
+	"muskdaily.com/docs"
+
 	gin "github.com/gin-gonic/gin"
 	config "muskdaily.com/config"
 	data "muskdaily.com/data"
@@ -47,5 +51,13 @@ func main() {
 		},
 	}.New()
 
+	docs.SwaggerInfo.Title = "Musk Daily API Documentation"
+	docs.SwaggerInfo.Description = "Simple API descriptions for musk daily API"
+	docs.SwaggerInfo.Version = "1.0"
+	docs.SwaggerInfo.Host = "localhost:" + configuration.Port
+	docs.SwaggerInfo.BasePath = ""
+	docs.SwaggerInfo.Schemes = []string{"http", "https"}
+
+	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 	r.Run(":" + configuration.Port)
 }

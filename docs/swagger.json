@@ -1,0 +1,118 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "contact": {},
+        "license": {}
+    },
+    "paths": {
+        "/account/activate": {
+            "post": {
+                "description": "It will activate the account if proper code is provided. The code will be sent to user through email.",
+                "consumes": [
+                    "application/json"
+                ],
+                "summary": "Activate a account",
+                "operationId": "activate-new-account",
+                "parameters": [
+                    {
+                        "description": "Email",
+                        "name": "Email",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "ActivationCode",
+                        "name": "ActivationCode",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "The account is activated."
+                    },
+                    "400": {
+                        "description": "The server cannot or will not process the request due to an apparent client error."
+                    },
+                    "401": {
+                        "description": "Wrong activation code is given."
+                    },
+                    "406": {
+                        "description": "The account is already activated."
+                    },
+                    "409": {
+                        "description": "The account is not registered yet."
+                    }
+                }
+            }
+        },
+        "/account/signup": {
+            "post": {
+                "description": "It will register new users if the post data provided properly.",
+                "consumes": [
+                    "application/json"
+                ],
+                "summary": "Signup an account",
+                "operationId": "signup-new-account",
+                "parameters": [
+                    {
+                        "description": "FirstName",
+                        "name": "firstName",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "LastName",
+                        "name": "lastname",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "Email",
+                        "name": "email",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "Password",
+                        "name": "password",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created a new account. Not active yet, an activation email will be sent to the given email."
+                    },
+                    "400": {
+                        "description": "The server cannot or will not process the request due to an apparent client error."
+                    },
+                    "406": {
+                        "description": "An account already exists with the given email."
+                    },
+                    "409": {
+                        "description": "Account was created before but not activated. A new activation email will be sent to the given email."
+                    }
+                }
+            }
+        }
+    }
+}
